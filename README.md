@@ -21,7 +21,6 @@ Esta Unidad 3 **no crea una base nueva ni borra nada**: amplía el esquema que y
 - [x] CRUD completo ejecutado: insertar, actualizar campo simple, actualizar campo anidado (objeto y arreglo), una operación multi-colección (dar de alta: hospitalización + cama + médico a la vez), soft delete (paciente inactivo) y eliminación definitiva real de un registro de prueba (`04_crud.js`).
 - [x] 4 consultas de agregación avanzadas nuevas, distintas a las de la Unidad 2 y a las del Foro U3 (`05_consultas_avanzadas.js`).
 - [x] `evidencia_ia.md`, `reflexion_etica.md`, `division_trabajo.md` completos.
-- [x] Guion de video (`guion_video.md`) — **pendiente de grabar**, no lo puede hacer la IA.
 - [x] **Capturas de pantalla reales** de mongosh tomadas (`Fotos/01_FOTO.png` a `12_FOTO.png`) e insertadas en el PDF, sección 5 ("Evidencia de ejecución").
 - [x] Informe final en PDF armado y revisado (incluye las 12 capturas reales).
 - [ ] Video grabado y enlace pegado en el informe/entrega.
@@ -66,7 +65,6 @@ Las 13 capturas reales ya están tomadas, guardadas en `Fotos/` e insertadas en 
 | `evidencia_ia.md` | Evidencia de uso de IA |
 | `reflexion_etica.md` | Reflexión ética |
 | `division_trabajo.md` | Aclaración de trabajo individual |
-| `guion_video.md` | Guion/checklist para grabar el video (máx. 10 minutos) |
 | `Grupo6_S1_ExploradoresNoSQL.pdf` | Informe final para entregar (incluye las 13 capturas reales) |
 | `Fotos/01_FOTO.png` … `12_FOTO.png` | Capturas reales de la ejecución en mongosh, insertadas en el PDF |
 | `Fotos/13_FOTO_conversacion_IA.png` | Captura de la conversación con Claude (autoevaluación contra la rúbrica), insertada en el PDF |
