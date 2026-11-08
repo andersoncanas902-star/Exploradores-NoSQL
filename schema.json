@@ -11,7 +11,8 @@
   "estrategia_resumen_nuevas_colecciones": {
     "medicos": "Coleccion propia, REFERENCIADA (igual que pacientes). Un mismo medico atiende muchisimas hospitalizaciones distintas a lo largo del tiempo. Si embebieramos los datos del medico dentro de cada hospitalizacion, orden o nota, estariamos copiando su nombre, especialidad y registro profesional centenares de veces, y si el medico cambia de telefono o de especialidad tocaria actualizar todos esos documentos repetidos. Referenciar evita esa duplicacion.",
     "camas": "Coleccion propia, REFERENCIADA desde hospitalizaciones. Una cama tambien se reutiliza una y otra vez (cuando un paciente sale, la cama queda libre para el siguiente), asi que no tiene sentido embeberla dentro de la hospitalizacion: la cama existe independientemente de quien este usandola en este momento. Ademas necesitamos poder preguntar '¿cuantas camas libres hay en Medicina Interna AHORA?' sin tener que revisar todas las hospitalizaciones; eso solo es rapido si camas es su propia coleccion con su propio campo 'estado'.",
-    "decision_de_diseno_denormalizacion_controlada": "Dentro de 'camas' guardamos el campo hospitalizacion_actual_id (quien la esta ocupando AHORA, o null si esta libre). Tecnicamente ese dato se podria calcular buscando en hospitalizaciones con estado:'activa' y cama_id:X, pero esa busqueda se haria todo el tiempo (cada vez que alguien pregunta por camas libres, que en un hospital es muy frecuente). Guardar una copia controlada de ese dato en la propia cama hace esa consulta instantanea, a cambio de que la aplicacion deba mantenerla sincronizada cada vez que alguien ingresa o se da de alta. Es un cambio deliberado de 'duplicar un poco' a cambio de 'responder mucho mas rapido', valido en NoSQL cuando se documenta y se controla (no es lo mismo que duplicar datos clinicos sensibles sin control)."
+    "decision_de_diseno_denormalizacion_controlada": "Dentro de 'camas' guardamos el campo hospitalizacion_actual_id (quien la esta ocupando AHORA, o null si esta libre). Tecnicamente ese dato se podria calcular buscando en hospitalizaciones con estado:'activa' y cama_id:X, pero esa busqueda se haria todo el tiempo (cada vez que alguien pregunta por camas libres, que en un hospital es muy frecuente). Guardar una copia controlada de ese dato en la propia cama hace esa consulta instantanea, a cambio de que la aplicacion deba mantenerla sincronizada cada vez que alguien ingresa o se da de alta. Es un cambio deliberado de 'duplicar un poco' a cambio de 'responder mucho mas rapido', valido en NoSQL cuando se documenta y se controla (no es lo mismo que duplicar datos clinicos sensibles sin control).",
+    "decision_de_diseno_contador_denormalizado_en_medicos": "Por la misma logica, 'medicos' tiene un campo total_altas_dadas (entero, empieza en 0) que se le suma 1 con $inc cada vez que ese medico da una alta (ver la operacion multi-coleccion en 04_crud.js). Es la misma idea que hospitalizacion_actual_id: se podria calcular siempre con un $lookup a hospitalizaciones (como hace la Consulta 2 de 05_consultas_avanzadas.js), pero tener el numero ya sumado sirve para un reporte rapido tipo 'ranking de medicos'. El riesgo es el mismo: si la aplicacion se olvida de sumarlo en algun punto, el contador queda desactualizado sin que Mongo avise (ver reflexion_etica.md, seccion de trazabilidad)."
   },
 
   "colecciones_nuevas": {
@@ -24,7 +25,8 @@
       "especialidad": "Medicina Interna",
       "servicio_principal": "Medicina Interna",
       "telefono": "3011239876",
-      "activo": true
+      "activo": true,
+      "total_altas_dadas": 2
     },
 
     "camas": {

@@ -36,7 +36,16 @@ if (!db.getCollectionNames().includes("medicos")) {
           especialidad: { bsonType: "string" },
           servicio_principal: { bsonType: "string" },
           telefono: { bsonType: "string" },
-          activo: { bsonType: "bool" } // si sigue trabajando en el hospital o ya no
+          activo: { bsonType: "bool" }, // si sigue trabajando en el hospital o ya no
+          // contador DENORMALIZADO (a proposito, igual que hospitalizacion_actual_id en camas):
+          // cuantas altas ha dado este medico en total. Se podria calcular siempre con un
+          // $lookup a hospitalizaciones (como hace la Consulta 2 de 05_consultas_avanzadas.js),
+          // pero tener tambien el contador ya sumado sirve para un reporte rapido tipo
+          // "ranking de medicos" sin tener que correr una agregacion cada vez. El precio es que
+          // la aplicacion (aqui, 04_crud.js) debe sumarle 1 manualmente cada vez que ese medico
+          // da una alta; si se olvida, el contador queda desactualizado (riesgo que se discute
+          // en reflexion_etica.md, seccion de trazabilidad).
+          total_altas_dadas: { bsonType: "int" }
         }
       }
     }

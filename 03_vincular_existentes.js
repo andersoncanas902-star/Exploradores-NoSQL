@@ -72,7 +72,20 @@ Object.keys(mapaCamas).forEach(hospId => {
 });
 print("Estado de las camas actualizado segun si su hospitalizacion sigue activa o ya tuvo alta.");
 
-// ---------- 4) verificacion rapida ----------
+// ---------- 4) poner al dia el contador total_altas_dadas de cada medico ----------
+// Este contador (ver 01_create_medicos_camas.js) no existia cuando se cargaron las
+// hospitalizaciones de la Unidad 2, asi que aqui lo calculamos UNA vez contando,
+// para cada medico, cuantas hospitalizaciones suyas YA tienen alta a esta fecha.
+// De aqui en adelante, cada alta nueva se suma con $inc desde 04_crud.js (no se
+// vuelve a recalcular todo desde cero cada vez, eso seria muy caro en una base grande).
+Object.values(mapaMedicos).forEach(medicoId => {
+  const totalAltas = db.hospitalizaciones.countDocuments({ medico_id: medicoId, estado: "dada_de_alta" });
+  db.medicos.updateOne({ _id: medicoId }, { $set: { total_altas_dadas: totalAltas } });
+});
+print("\ncontador total_altas_dadas puesto al dia para los 5 medicos con historial previo.");
+db.medicos.find({}, { _id: 1, nombre_completo: 1, total_altas_dadas: 1 }).forEach(d => printjson(d));
+
+// ---------- 5) verificacion rapida ----------
 print("\n=== Verificacion: hospitalizaciones activas y su cama ===");
 db.hospitalizaciones.find({ estado: "activa" }, { _id: 1, paciente_id: 1, medico_id: 1, cama_id: 1 }).forEach(d => printjson(d));
 

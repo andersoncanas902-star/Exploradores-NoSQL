@@ -34,12 +34,12 @@ db.camas.find().limit(2)
 
 Ejecuta (o copia y pega) cada bloque de `04_crud.js` por separado, explicando qué hace cada uno antes de correrlo:
 
-1. **Create:** insertar el nuevo paciente, su hospitalización (ya con `medico_id` y `cama_id`) y la orden de medicamento.
+1. **Create:** insertar el nuevo paciente, su hospitalización (ya con `medico_id` y `cama_id`) y la orden de medicamento. Explica por qué el insert de la hospitalización también actualiza la cama en el mismo paso (consistencia).
 2. **Update simple:** cambiar el teléfono de un paciente.
-3. **Update anidado (objeto):** cambiar el teléfono del contacto de emergencia (`contacto_emergencia.telefono`).
-4. **Update anidado (arreglo):** agregar un diagnóstico secundario con `$push`.
-5. **Update anidado (subdocumento completo):** llenar el campo `alta` de una hospitalización que estaba activa.
-6. **Soft delete:** liberar una cama (cambiar su estado) y marcar un paciente como inactivo, explicando por qué no se puede borrar una historia clínica de verdad (razón legal, Ley 1581).
+3. **Update anidado (objeto):** cambiar el teléfono del contacto de emergencia (`contacto_emergencia.telefono`), explicando por qué se usa notación de punto y no se reemplaza todo el objeto.
+4. **Update anidado (arreglo):** agregar un diagnóstico secundario con `$push`, explicando por qué no se usa `$set` sobre todo el arreglo (se perdería el diagnóstico principal).
+5. **Operación multi-colección — dar de alta:** este es el bloque más importante para mostrar bien. Ejecuta el bloque "OPERACION MULTI-COLECCION" de `04_crud.js` y explica en cámara que una sola alta toca 3 colecciones a la vez (hospitalizaciones, camas, medicos), y por qué eso es un riesgo de integridad en MongoDB (no hay transacción automática) — este es justo el ejemplo que conecta con la reflexión ética.
+6. **Soft delete:** marcar un paciente como inactivo, explicando por qué no se puede borrar una historia clínica de verdad (razón legal, Ley 1581).
 7. **Hard delete:** insertar y luego eliminar el registro de prueba, explicando que ahí sí es una eliminación real y definitiva, porque es un dato de prueba, no un dato clínico.
 
 ## 5. Las 4 consultas avanzadas (7:00 - 9:30)
@@ -60,7 +60,7 @@ Ejecuta cada consulta de `05_consultas_avanzadas.js` una por una y explica en un
 
 - [ ] Se ve la cara o al menos se escucha claro tu voz explicando (revisa las normas de tu curso sobre esto).
 - [ ] Se muestran las 2 colecciones nuevas.
-- [ ] Se ejecutan y explican las 7 operaciones del CRUD (create, update simple, 2 updates anidados más el de alta, soft delete x2, hard delete).
+- [ ] Se ejecutan y explican las operaciones del CRUD: create (paciente + hospitalización + orden), update simple, update anidado objeto, update anidado arreglo, la operación multi-colección de dar de alta (hospitalización + cama + médico), soft delete y hard delete.
 - [ ] Se ejecutan y explican las 4 consultas avanzadas.
 - [ ] Dura 10 minutos o menos.
 - [ ] El enlace del video queda pegado en el informe final / en la entrega de la plataforma.

@@ -9,6 +9,7 @@ Esta Unidad 3 **no crea una base nueva ni borra nada**: amplía el esquema que y
 - Colección **medicos** (7 documentos): los 5 médicos que ya aparecían como texto suelto en la Unidad 2, convertidos en entidad propia, más 2 médicos nuevos sin pacientes asignados todavía.
 - Colección **camas** (16 documentos): entidad nueva que no existía, repartida en 4 servicios (UCI, Cirugía General, Medicina Interna, Ortopedia y Traumatología), con estado `libre` / `ocupada` / `mantenimiento`.
 - Las colecciones `hospitalizaciones`, `ordenes_medicamento` y `notas_evolucion` ahora tienen un campo `medico_id` (y `hospitalizaciones` también `cama_id`), referenciando a las colecciones nuevas, sin borrar los campos de texto que ya tenían (se conservan como histórico).
+- `medicos` también tiene un contador denormalizado `total_altas_dadas`, que se actualiza con `$inc` en el CRUD cada vez que ese médico da una alta (ver la sección "decisión de diseño" en `schema.json` y la operación multi-colección en `04_crud.js`).
 - Justificación completa de embedding vs. referencing para las dos entidades nuevas: ver `schema.json`.
 
 ## Estado
@@ -17,7 +18,7 @@ Esta Unidad 3 **no crea una base nueva ni borra nada**: amplía el esquema que y
 - [x] Colecciones `medicos` y `camas` creadas, con validación e índices (`01_create_medicos_camas.js`).
 - [x] 7 médicos y 16 camas de prueba cargados (`02_insert_medicos_camas.js`).
 - [x] Las 10 hospitalizaciones de la Unidad 2 vinculadas a médico y cama reales (`03_vincular_existentes.js`).
-- [x] CRUD completo ejecutado: insertar, actualizar campo simple, actualizar campo anidado (objeto y arreglo), soft delete (cama liberada + paciente inactivo) y eliminación definitiva real de un registro de prueba (`04_crud.js`).
+- [x] CRUD completo ejecutado: insertar, actualizar campo simple, actualizar campo anidado (objeto y arreglo), una operación multi-colección (dar de alta: hospitalización + cama + médico a la vez), soft delete (paciente inactivo) y eliminación definitiva real de un registro de prueba (`04_crud.js`).
 - [x] 4 consultas de agregación avanzadas nuevas, distintas a las de la Unidad 2 y a las del Foro U3 (`05_consultas_avanzadas.js`).
 - [x] `evidencia_ia.md`, `reflexion_etica.md`, `division_trabajo.md` completos.
 - [x] Guion de video (`guion_video.md`) — **pendiente de grabar**, no lo puede hacer la IA.

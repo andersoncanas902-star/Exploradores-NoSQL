@@ -11,20 +11,26 @@ use("hce_hospitalizacion_grupo_6");
 // ---------- MEDICOS ----------
 if (db.medicos.countDocuments() === 0) {
   db.medicos.insertMany([
-    { _id: "MED001", nombre_completo: "Dr. Andres Felipe Suarez", documento_identidad: { tipo: "CC", numero: "70556123" }, registro_medico: "TP-45231-ANT", especialidad: "Medicina Interna", servicio_principal: "Medicina Interna", telefono: "3011239876", activo: true },
-    { _id: "MED002", nombre_completo: "Dra. Camila Vasquez", documento_identidad: { tipo: "CC", numero: "43221098" }, registro_medico: "TP-50112-ANT", especialidad: "Cirugia General", servicio_principal: "Cirugia General", telefono: "3022348765", activo: true },
-    { _id: "MED003", nombre_completo: "Dr. Oscar Giraldo", documento_identidad: { tipo: "CC", numero: "71004455" }, registro_medico: "TP-38890-ANT", especialidad: "Medicina Interna", servicio_principal: "Medicina Interna", telefono: "3033457890", activo: true },
-    { _id: "MED004", nombre_completo: "Dr. Santiago Lopera", documento_identidad: { tipo: "CC", numero: "15778899" }, registro_medico: "TP-41256-ANT", especialidad: "Ortopedia y Traumatologia", servicio_principal: "Ortopedia y Traumatologia", telefono: "3044567123", activo: true },
-    { _id: "MED005", nombre_completo: "Dra. Natalia Correa", documento_identidad: { tipo: "CC", numero: "43556712" }, registro_medico: "TP-47765-ANT", especialidad: "Medicina Interna", servicio_principal: "Medicina Interna", telefono: "3055678234", activo: true },
+    // total_altas_dadas arranca en 0 para todos; 03_vincular_existentes.js lo pone al
+    // dia con las altas que ya existian antes de que este contador existiera.
+    { _id: "MED001", nombre_completo: "Dr. Andres Felipe Suarez", documento_identidad: { tipo: "CC", numero: "70556123" }, registro_medico: "TP-45231-ANT", especialidad: "Medicina Interna", servicio_principal: "Medicina Interna", telefono: "3011239876", activo: true, total_altas_dadas: 0 },
+    { _id: "MED002", nombre_completo: "Dra. Camila Vasquez", documento_identidad: { tipo: "CC", numero: "43221098" }, registro_medico: "TP-50112-ANT", especialidad: "Cirugia General", servicio_principal: "Cirugia General", telefono: "3022348765", activo: true, total_altas_dadas: 0 },
+    { _id: "MED003", nombre_completo: "Dr. Oscar Giraldo", documento_identidad: { tipo: "CC", numero: "71004455" }, registro_medico: "TP-38890-ANT", especialidad: "Medicina Interna", servicio_principal: "Medicina Interna", telefono: "3033457890", activo: true, total_altas_dadas: 0 },
+    { _id: "MED004", nombre_completo: "Dr. Santiago Lopera", documento_identidad: { tipo: "CC", numero: "15778899" }, registro_medico: "TP-41256-ANT", especialidad: "Ortopedia y Traumatologia", servicio_principal: "Ortopedia y Traumatologia", telefono: "3044567123", activo: true, total_altas_dadas: 0 },
+    { _id: "MED005", nombre_completo: "Dra. Natalia Correa", documento_identidad: { tipo: "CC", numero: "43556712" }, registro_medico: "TP-47765-ANT", especialidad: "Medicina Interna", servicio_principal: "Medicina Interna", telefono: "3055678234", activo: true, total_altas_dadas: 0 },
     // estos 2 son nuevos: todavia no han atendido a nadie en la base (sirve para la
     // consulta de "carga de pacientes por medico" en 05_consultas_avanzadas.js).
-    { _id: "MED006", nombre_completo: "Dra. Laura Jaramillo", documento_identidad: { tipo: "CC", numero: "1040223311" }, registro_medico: "TP-52980-ANT", especialidad: "Medicina Interna", servicio_principal: "Medicina Interna", telefono: "3066789345", activo: true },
-    { _id: "MED007", nombre_completo: "Dr. Felipe Montoya", documento_identidad: { tipo: "CC", numero: "98123456" }, registro_medico: "TP-39871-ANT", especialidad: "Cirugia General", servicio_principal: "Cirugia General", telefono: "3077890456", activo: true }
+    { _id: "MED006", nombre_completo: "Dra. Laura Jaramillo", documento_identidad: { tipo: "CC", numero: "1040223311" }, registro_medico: "TP-52980-ANT", especialidad: "Medicina Interna", servicio_principal: "Medicina Interna", telefono: "3066789345", activo: true, total_altas_dadas: 0 },
+    { _id: "MED007", nombre_completo: "Dr. Felipe Montoya", documento_identidad: { tipo: "CC", numero: "98123456" }, registro_medico: "TP-39871-ANT", especialidad: "Cirugia General", servicio_principal: "Cirugia General", telefono: "3077890456", activo: true, total_altas_dadas: 0 }
   ]);
   print("7 medicos insertados.");
 } else {
   print("Ya habia medicos cargados, no se insertan de nuevo.");
 }
+
+// Parche para cuando este script ya se habia corrido ANTES de que existiera el campo
+// total_altas_dadas (lo deja en 0 solo si el documento todavia no lo tiene).
+db.medicos.updateMany({ total_altas_dadas: { $exists: false } }, { $set: { total_altas_dadas: 0 } });
 
 // ---------- CAMAS ----------
 // Las distribuyo por servicio y piso. OJO: dejo varias camas "sin usar" (nunca referenciadas

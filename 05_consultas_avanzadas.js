@@ -10,8 +10,13 @@ use("hce_hospitalizacion_grupo_6");
 
 // ================================================================
 // CONSULTA 1: Ocupacion de camas por servicio
-// Util para: la coordinacion del hospital, que necesita saber en
-// tiempo real cuantas camas libres le quedan a cada servicio.
+// Pregunta que responde: ¿cuantas camas libres y ocupadas tiene AHORA cada
+// servicio, y que porcentaje de ocupacion representa?
+// Por que le importa a la Gobernacion de Antioquia: con hospitales publicos
+// reportando esto, la Secretaria de Salud podria ver en un tablero en que
+// municipios/servicios ya no hay camas disponibles y decidir a donde remitir
+// pacientes nuevos o donde reforzar personal, en vez de enterarse del
+// problema cuando ya no hay donde atender a alguien.
 // Etapas: $match -> $group -> $project -> $sort
 // ================================================================
 print("\n=== CONSULTA 1: Ocupacion de camas por servicio ===");
@@ -40,8 +45,17 @@ db.camas.aggregate([
 
 // ================================================================
 // CONSULTA 2: Carga de pacientes por medico (incluye medicos con 0)
-// Util para: saber que medico tiene mas hospitalizaciones a cargo
-// ahora mismo, y detectar medicos sin pacientes asignados.
+// Pregunta que responde: ¿que medico tiene mas hospitalizaciones a cargo, cuantas
+// de esas siguen activas ahora mismo, y que medicos todavia no tienen a nadie
+// asignado?
+// Por que le importa a la Gobernacion de Antioquia: permite ver si la carga de
+// trabajo esta repartida de forma pareja entre el personal medico de un servicio,
+// o si unos pocos medicos estan sobrecargados mientras otros estan disponibles,
+// algo clave para decidir donde reforzar turnos o redistribuir personal.
+// Nota: "total_hospitalizaciones" se calcula aqui EN VIVO con $lookup (siempre
+// exacto, pero recalculando cada vez); medicos.total_altas_dadas (ver 01 y 04) es
+// un contador ya sumado para consultas rapidas tipo ranking. Son dos formas
+// distintas de responder preguntas parecidas, cada una con su costo/beneficio.
 // Etapas: $lookup -> $project -> $sort
 // ================================================================
 print("\n=== CONSULTA 2: Carga de hospitalizaciones por medico ===");
@@ -79,10 +93,15 @@ db.medicos.aggregate([
 
 // ================================================================
 // CONSULTA 3: Tiempo de estancia promedio por servicio
-// Util para: ver que servicio tiene las hospitalizaciones mas largas
-// (ej. para planear mejor cuantas camas necesita cada uno).
-// Solo se cuentan las hospitalizaciones que YA tienen alta (si sigue
-// activa todavia no se sabe cuanto va a durar).
+// Pregunta que responde: ¿que servicio tiene, en promedio, las hospitalizaciones
+// mas largas? Solo se cuentan las que YA tienen alta (si sigue activa todavia no
+// se sabe cuanto va a durar, incluirla danaria el promedio).
+// Por que le importa a la Gobernacion de Antioquia: la estancia promedio es uno
+// de los indicadores que mas se usa para planear cuantas camas necesita cada
+// servicio (si Medicina Interna siempre tiene estancias largas, necesita mas
+// camas que un servicio con pacientes que entran y salen rapido) y para detectar
+// si un servicio se esta demorando mas de lo esperado en dar salida a sus
+// pacientes, lo que puede significar sobrecarga o un problema de gestion.
 // Etapas: $match -> $project -> $group -> $project -> $sort
 // (nota: $round no se puede escribir directo dentro de un $avg en el mismo
 // $group en esta version de Mongo, por eso el redondeo queda en un $project
@@ -125,9 +144,16 @@ db.hospitalizaciones.aggregate([
 
 // ================================================================
 // CONSULTA 4: Diagnosticos mas frecuentes (patron epidemiologico)
-// Util para: ver que enfermedades estan llegando mas seguido al
-// hospital, y en que servicios aparecen, algo clave para vigilancia
-// epidemiologica (ej. si de repente sube mucho un virus respiratorio).
+// Pregunta que responde: ¿que diagnosticos CIE-10 son los mas comunes en la
+// base, y en que servicios aparecen?
+// Por que le importa a la Gobernacion de Antioquia: esto es justo el tipo de
+// dato que alimenta la vigilancia epidemiologica departamental (ej. si de
+// repente sube mucho un diagnostico respiratorio en varios hospitales a la vez,
+// podria ser el inicio de un brote, y la Secretaria de Salud necesita verlo
+// rapido para reaccionar, no despues de semanas). Aclaracion honesta: con los
+// pocos datos de prueba de esta base cada diagnostico sale con frecuencia 1,
+// pero con datos reales de produccion (miles de hospitalizaciones) esta misma
+// consulta si mostraria patrones repetidos de verdad.
 // Etapas: $unwind -> $group -> $sort -> $project -> $limit
 // ================================================================
 print("\n=== CONSULTA 4: Diagnosticos mas frecuentes (top 10) ===");
