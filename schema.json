@@ -1,0 +1,60 @@
+{
+  "_comentario": "AJUSTE del esquema documental del subsistema de Hospitalizacion (Unidad 2) para la Unidad 3. Motor: MongoDB. Misma base de datos: hce_hospitalizacion_grupo_6. NO se borra nada de lo que ya existia: se agregan 2 colecciones nuevas (medicos y camas) y se referencian desde las colecciones que ya existian.",
+
+  "que_cambia_respecto_a_u2": {
+    "medicos": "NUEVA coleccion propia. Antes, el nombre del medico era solo un texto suelto dentro de hospitalizaciones, ordenes_medicamento y notas_evolucion (ej. 'Dr. Andres Felipe Suarez'). Eso no permitia saber la especialidad de ese medico, ni contar cuantos pacientes tiene a cargo, ni avisar si cambia de servicio. Convertirlo en una coleccion propia soluciona eso.",
+    "camas": "NUEVA coleccion propia. Antes, una hospitalizacion no tenia ninguna cama asociada (solo 'servicio', como texto). Sin cama no se puede saber en tiempo real cuantas camas libres quedan en un piso o servicio, que es justo lo que un hospital necesita saber a cada minuto.",
+    "hospitalizaciones": "Se le agregan 2 campos nuevos, opcionales en el validador: medico_id (referencia a medicos) y cama_id (referencia a camas). El campo de texto medico_tratante NO se borra: se deja como 'foto' del nombre en el momento del ingreso (asi, si el medico cambia de nombre o de especialidad despues, el historico de esa hospitalizacion no se altera), y medico_id se usa para las consultas y reportes en vivo.",
+    "ordenes_medicamento y notas_evolucion": "Se les agrega medico_id (referencia a medicos) con la misma logica: el campo de texto (medico_ordena / medico) se conserva como historico, medico_id se usa para consultar y agrupar."
+  },
+
+  "estrategia_resumen_nuevas_colecciones": {
+    "medicos": "Coleccion propia, REFERENCIADA (igual que pacientes). Un mismo medico atiende muchisimas hospitalizaciones distintas a lo largo del tiempo. Si embebieramos los datos del medico dentro de cada hospitalizacion, orden o nota, estariamos copiando su nombre, especialidad y registro profesional centenares de veces, y si el medico cambia de telefono o de especialidad tocaria actualizar todos esos documentos repetidos. Referenciar evita esa duplicacion.",
+    "camas": "Coleccion propia, REFERENCIADA desde hospitalizaciones. Una cama tambien se reutiliza una y otra vez (cuando un paciente sale, la cama queda libre para el siguiente), asi que no tiene sentido embeberla dentro de la hospitalizacion: la cama existe independientemente de quien este usandola en este momento. Ademas necesitamos poder preguntar '¿cuantas camas libres hay en Medicina Interna AHORA?' sin tener que revisar todas las hospitalizaciones; eso solo es rapido si camas es su propia coleccion con su propio campo 'estado'.",
+    "decision_de_diseno_denormalizacion_controlada": "Dentro de 'camas' guardamos el campo hospitalizacion_actual_id (quien la esta ocupando AHORA, o null si esta libre). Tecnicamente ese dato se podria calcular buscando en hospitalizaciones con estado:'activa' y cama_id:X, pero esa busqueda se haria todo el tiempo (cada vez que alguien pregunta por camas libres, que en un hospital es muy frecuente). Guardar una copia controlada de ese dato en la propia cama hace esa consulta instantanea, a cambio de que la aplicacion deba mantenerla sincronizada cada vez que alguien ingresa o se da de alta. Es un cambio deliberado de 'duplicar un poco' a cambio de 'responder mucho mas rapido', valido en NoSQL cuando se documenta y se controla (no es lo mismo que duplicar datos clinicos sensibles sin control)."
+  },
+
+  "colecciones_nuevas": {
+
+    "medicos": {
+      "_id": "MED001",
+      "nombre_completo": "Dr. Andres Felipe Suarez",
+      "documento_identidad": { "tipo": "CC", "numero": "70556123" },
+      "registro_medico": "TP-45231-ANT",
+      "especialidad": "Medicina Interna",
+      "servicio_principal": "Medicina Interna",
+      "telefono": "3011239876",
+      "activo": true
+    },
+
+    "camas": {
+      "_id": "CAMA007",
+      "numero_cama": "301",
+      "piso": 3,
+      "servicio": "Medicina Interna",
+      "estado": "libre",
+      "hospitalizacion_actual_id": null
+    }
+  },
+
+  "colecciones_existentes_ajustadas": {
+    "hospitalizaciones": {
+      "_id": "HOSP011",
+      "paciente_id": "PAC011",
+      "fecha_admision": "2026-11-05T09:10:00Z",
+      "motivo_admision": "Enrojecimiento, dolor e hinchazon en pierna derecha de 2 dias",
+      "servicio": "Medicina Interna",
+      "medico_tratante": "Dra. Laura Jaramillo",
+      "medico_id": "MED006",
+      "cama_id": "CAMA007",
+      "estado": "activa",
+      "diagnosticos": [
+        { "codigo_cie10": "L03.11", "descripcion": "Celulitis de miembro inferior derecho", "tipo": "principal", "fecha": "2026-11-05T09:40:00Z" }
+      ],
+      "alta": null,
+      "_comentario_campos_nuevos": "medico_id y cama_id son los unicos campos agregados frente al esquema de la Unidad 2. medico_tratante se conserva igual que antes (historico de texto)."
+    }
+  },
+
+  "justificacion_general_embedding_vs_referencing_u3": "Se mantiene el mismo criterio usado en la Unidad 2: se EMBEBE solo lo que (a) es pequeno y acotado, (b) no se reutiliza en otro lado y (c) siempre se consulta junto con su documento padre (diagnosticos y alta dentro de hospitalizaciones). Se REFERENCIA todo lo que (a) se reutiliza muchas veces desde varios documentos (pacientes, medicos, camas) o (b) crece sin limite con el tiempo (notas_evolucion, signos_vitales, notas_enfermeria, ordenes_medicamento). Medicos y camas caen claramente en el primer grupo de la regla de referenciar: se reutilizan constantemente."
+}
