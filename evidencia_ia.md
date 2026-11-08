@@ -37,4 +37,4 @@ A continuación dejo casos concretos y trazables de interacciones reales que ocu
 **Nota de honestidad académica:** declaro el uso de IA tal como lo pide el enunciado, sin ocultarlo. Claude generó directamente el código, los datos de prueba y el armado del informe; la ejecución contra el motor real, la verificación de resultados y la postura ética final son mías.
 
 **Capturas incluidas en el PDF (sección "Evidencia de IA"):**
-- `[CAPTURA: fragmento de esta conversación con Claude, mostrando el diseño de medicos/camas y la corrección del error de $round]`
+- `Fotos/13_FOTO_conversacion_IA.png` — fragmento real de esta conversación con Claude, con la tabla de autoevaluación contra la rúbrica del curso (menciona explícitamente el bug real de `$round` y las mejoras de CRUD/consultas/IA/ética descritas en el Caso 4 arriba).

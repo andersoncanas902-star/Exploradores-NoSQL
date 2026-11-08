@@ -49,9 +49,9 @@ load("05_consultas_avanzadas.js")
 
 ## Capturas de pantalla
 
-Las 12 capturas reales de la ejecución en mongosh ya están tomadas y guardadas en `Fotos/01_FOTO.png` a `Fotos/12_FOTO.png`, e insertadas en el PDF (sección 5, "Evidencia de ejecución"). Cubren, en orden cronológico, la creación de colecciones, la carga de datos, la vinculación, las 7 operaciones del CRUD y las 4 consultas avanzadas.
-
-**Falta todavía una sola captura, que no es de mongosh:** un pantallazo de la conversación con Claude que muestre el diseño de `medicos`/`camas` y la corrección del error de `$round` (mencionado en `evidencia_ia.md`, caso 3). Esa la tienes que tomar tú de esta misma conversación; el placeholder sigue marcado como `[CAPTURA PENDIENTE: ...]` en el PDF hasta que la agregues.
+Las 13 capturas reales ya están tomadas, guardadas en `Fotos/` e insertadas en el PDF — no queda ningún placeholder de captura pendiente:
+- `01_FOTO.png` a `12_FOTO.png`: ejecución real en mongosh (sección 5 del PDF, "Evidencia de ejecución"). Cubren, en orden cronológico, la creación de colecciones, la carga de datos, la vinculación, las 7 operaciones del CRUD y las 4 consultas avanzadas.
+- `13_FOTO_conversacion_IA.png`: fragmento de la conversación con Claude, con la tabla de autoevaluación contra la rúbrica del curso (sección 6 del PDF, "Evidencia de uso de IA").
 
 ## Archivos de esta carpeta
 
@@ -67,5 +67,6 @@ Las 12 capturas reales de la ejecución en mongosh ya están tomadas y guardadas
 | `reflexion_etica.md` | Reflexión ética |
 | `division_trabajo.md` | Aclaración de trabajo individual |
 | `guion_video.md` | Guion/checklist para grabar el video (máx. 10 minutos) |
-| `Grupo6_S1_ExploradoresNoSQL.pdf` | Informe final para entregar (incluye las 12 capturas reales) |
+| `Grupo6_S1_ExploradoresNoSQL.pdf` | Informe final para entregar (incluye las 13 capturas reales) |
 | `Fotos/01_FOTO.png` … `12_FOTO.png` | Capturas reales de la ejecución en mongosh, insertadas en el PDF |
+| `Fotos/13_FOTO_conversacion_IA.png` | Captura de la conversación con Claude (autoevaluación contra la rúbrica), insertada en el PDF |
