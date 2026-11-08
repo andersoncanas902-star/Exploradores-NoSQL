@@ -22,8 +22,8 @@ Esta Unidad 3 **no crea una base nueva ni borra nada**: amplía el esquema que y
 - [x] 4 consultas de agregación avanzadas nuevas, distintas a las de la Unidad 2 y a las del Foro U3 (`05_consultas_avanzadas.js`).
 - [x] `evidencia_ia.md`, `reflexion_etica.md`, `division_trabajo.md` completos.
 - [x] Guion de video (`guion_video.md`) — **pendiente de grabar**, no lo puede hacer la IA.
-- [ ] **Capturas de pantalla reales** de mongosh/Compass para cada operación y cada consulta (pendiente — tienes que tomarlas tú, ver instrucciones abajo).
-- [ ] Informe final en PDF armado y revisado.
+- [x] **Capturas de pantalla reales** de mongosh tomadas (`Fotos/01_FOTO.png` a `12_FOTO.png`) e insertadas en el PDF, sección 5 ("Evidencia de ejecución").
+- [x] Informe final en PDF armado y revisado (incluye las 12 capturas reales).
 - [ ] Video grabado y enlace pegado en el informe/entrega.
 - [ ] Repositorio subido a GitHub.
 - [ ] Entrega realizada en la plataforma del curso.
@@ -47,14 +47,11 @@ load("05_consultas_avanzadas.js")
 
 **Importante:** `04_crud.js` inserta documentos de prueba (`PAC011`, `HOSP011`, etc.) y modifica datos reales (da de alta a `HOSP008`, marca `PAC009` como inactiva). Si lo corres dos veces, va a fallar al intentar insertar `PAC011` de nuevo porque el `_id` ya existe (es el comportamiento esperado de un `insertOne`, no es un error del script). Si necesitas repetirlo desde cero, borra esos documentos de prueba primero.
 
-## Dónde tomar las capturas que faltan
+## Capturas de pantalla
 
-Para el informe en PDF necesitas pegar capturas reales de tu pantalla (mongosh o Compass) de:
-1. Las 2 colecciones nuevas creadas (`show collections` o `db.getCollectionNames()`).
-2. Cada operación del CRUD en `04_crud.js` (idealmente una por cada bloque CREATE/UPDATE/DELETE).
-3. El resultado de cada una de las 4 consultas de `05_consultas_avanzadas.js`.
+Las 12 capturas reales de la ejecución en mongosh ya están tomadas y guardadas en `Fotos/01_FOTO.png` a `Fotos/12_FOTO.png`, e insertadas en el PDF (sección 5, "Evidencia de ejecución"). Cubren, en orden cronológico, la creación de colecciones, la carga de datos, la vinculación, las 7 operaciones del CRUD y las 4 consultas avanzadas.
 
-Ninguna de esas capturas la puede generar la IA — tienen que ser pantallazos reales de tu terminal.
+**Falta todavía una sola captura, que no es de mongosh:** un pantallazo de la conversación con Claude que muestre el diseño de `medicos`/`camas` y la corrección del error de `$round` (mencionado en `evidencia_ia.md`, caso 3). Esa la tienes que tomar tú de esta misma conversación; el placeholder sigue marcado como `[CAPTURA PENDIENTE: ...]` en el PDF hasta que la agregues.
 
 ## Archivos de esta carpeta
 
@@ -70,3 +67,5 @@ Ninguna de esas capturas la puede generar la IA — tienen que ser pantallazos r
 | `reflexion_etica.md` | Reflexión ética |
 | `division_trabajo.md` | Aclaración de trabajo individual |
 | `guion_video.md` | Guion/checklist para grabar el video (máx. 10 minutos) |
+| `Grupo6_S1_ExploradoresNoSQL.pdf` | Informe final para entregar (incluye las 12 capturas reales) |
+| `Fotos/01_FOTO.png` … `12_FOTO.png` | Capturas reales de la ejecución en mongosh, insertadas en el PDF |
